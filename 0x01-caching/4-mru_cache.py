@@ -1,20 +1,20 @@
 #!/usr/bin/python3
 """
-class LRUCache inheriting from BaseCaching and is a caching system
+class MRUCache inheriting from BaseCaching and is a caching system
 """
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class LRUCache(BaseCaching):
+class MRUCache(BaseCaching):
     """
-    'LRUCache' defines a LRU caching system
+    'MRUCache' defines a MRU cache caching system
     """
 
     def __init__(self):
         """
         initialization method for the class
         """
-        self.queue = []
+        self.stack = []
         super().__init__()
 
     def put(self, key, item):
@@ -24,13 +24,13 @@ class LRUCache(BaseCaching):
         """
         if key and item:
             if self.cache_data.get(key):
-                self.queue.remove(key)
-            self.queue.append(key)
-            self.cache_data[key] = item
-            if len(self.queue) > self.MAX_ITEMS:
-                delete = self.queue.pop(0)
+                self.stack.remove(key)
+            while len(self.stack) >= self.MAX_ITEMS:
+                delete = self.stack.pop()
                 self.cache_data.pop(delete)
                 print('DISCARD: {}'.format(delete))
+            self.stack.append(key)
+            self.cache_data[key] = item
 
     def get(self, key):
         """
@@ -38,6 +38,6 @@ class LRUCache(BaseCaching):
         within an object
         """
         if self.cache_data.get(key):
-            self.queue.remove(key)
-            self.queue.append(key)
+            self.stack.remove(key)
+            self.stack.append(key)
         return self.cache_data.get(key)
